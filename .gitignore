@@ -8,6 +8,7 @@
 ## npm
 /node_modules/
 /npm-debug.log
+/backend/node_modules/
 
 ## testing
 /coverage/
@@ -22,3 +23,6 @@
 
 storybook-static
 custom-elements.json
+
+#env
+/backend/.env

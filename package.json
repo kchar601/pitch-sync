@@ -7,20 +7,25 @@
   "type": "module",
   "scripts": {
     "analyze": "cem analyze --litelement",
-    "start": "web-dev-server",
-    "preinstall": "npx npm-force-resolutions"
+    "preinstall": "npx npm-force-resolutions",
+    "start": "concurrently \"npm run backend\" \"npm run wait-and-start-frontend\"",
+    "backend": "node backend/server.js",
+    "frontend": "web-dev-server",
+    "wait-and-start-frontend": "wait-on http://localhost:5000/status && npm run frontend"
   },
   "resolutions": {
     "path-to-regexp": "8.0.0"
   },
   "dependencies": {
     "@vaadin/router": "^1.7.5",
+    "concurrently": "^9.0.1",
     "lit": "^3.1.4"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.3",
     "@web/dev-server": "^0.4.6",
-    "npm-force-resolutions": "^0.0.10"
+    "npm-force-resolutions": "^0.0.10",
+    "wait-on": "^8.0.1"
   },
   "customElements": "custom-elements.json"
 }
