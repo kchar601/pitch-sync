@@ -28,6 +28,37 @@ class PitchSync extends LitElement {
     ]);
   }
 
+  sendFetch() {
+    // works!
+    fetch("http://localhost:5000/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: "user@example.com",
+        password: "password123",
+        firstName: "John",
+        lastName: "Doe",
+        role: "player", // or 'coach'
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Registration successful:", data);
+        // Handle the JWT token here, e.g., store it in localStorage
+        localStorage.setItem("token", data.token);
+      })
+      .catch((error) => console.error("Fetch error:", error.message));
+
+    localStorage.setItem("token", data.token);
+  }
+
   render() {
     return html`
       <nav>
@@ -38,6 +69,7 @@ class PitchSync extends LitElement {
       <main>
         <div id="outlet"></div>
       </main>
+      <button @click="${this.sendFetch}">Click me</button>
     `;
   }
 }
