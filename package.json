@@ -1,0 +1,26 @@
+{
+  "name": "pitch-sync",
+  "description": "Webcomponent pitch-sync following open-wc recommendations",
+  "license": "MIT",
+  "author": "pitch-sync",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "analyze": "cem analyze --litelement",
+    "start": "web-dev-server",
+    "preinstall": "npx npm-force-resolutions"
+  },
+  "resolutions": {
+    "path-to-regexp": "8.0.0"
+  },
+  "dependencies": {
+    "@vaadin/router": "^1.7.5",
+    "lit": "^3.1.4"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.10.3",
+    "@web/dev-server": "^0.4.6",
+    "npm-force-resolutions": "^0.0.10"
+  },
+  "customElements": "custom-elements.json"
+}
