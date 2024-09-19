@@ -28,19 +28,47 @@ class PitchSync extends LitElement {
     ]);
   }
 
-  sendFetch() {
-    // works!
-    fetch("http://localhost:5000/auth/register", {
+  async handleRegister() {
+    try {
+      const sampleData = {
+        email: "sampleuser@example.com",
+        password: "password123",
+        firstName: "John",
+        lastName: "Doe",
+        role: "player", // or 'coach'
+      };
+      const response = await fetch("http://localhost:5000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(sampleData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(`Registration failed: ${data.message}`);
+        return;
+      }
+
+      alert(data.message); // "Registration successful. Please log in."
+      window.location.href = "/login"; // Redirect to the login page
+    } catch (error) {
+      console.error("Error during registration:", error);
+      alert("An unexpected error occurred.");
+    }
+  }
+
+  login() {
+    fetch("http://localhost:5000/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: "user@example.com",
+        email: "sampleuser@example.com",
         password: "password123",
-        firstName: "John",
-        lastName: "Doe",
-        role: "player", // or 'coach'
       }),
     })
       .then((response) => {
@@ -50,13 +78,29 @@ class PitchSync extends LitElement {
         return response.json();
       })
       .then((data) => {
-        console.log("Registration successful:", data);
+        console.log("Login successful:", data);
         // Handle the JWT token here, e.g., store it in localStorage
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
       })
       .catch((error) => console.error("Fetch error:", error.message));
+  }
 
-    localStorage.setItem("token", data.token);
+  logout() {
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    fetch("http://localhost:5000/auth/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ refreshToken }),
+    }).then(() => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      alert("You have been logged out");
+      window.location.href = "/login";
+    });
   }
 
   render() {
@@ -69,7 +113,9 @@ class PitchSync extends LitElement {
       <main>
         <div id="outlet"></div>
       </main>
-      <button @click="${this.sendFetch}">Click me</button>
+      <button @click="${this.handleRegister}">Register</button>
+      <button @click="${this.login}">Login</button>
+      <button @click="${this.logout}">Logout</button>
     `;
   }
 }

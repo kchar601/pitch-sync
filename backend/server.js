@@ -19,7 +19,10 @@ app.use(
 );
 
 // MongoDB connection string using environment variables
-const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/?${process.env.MONGODB_OPTIONS}`;
+const uri =
+  "mongodb+srv://kchar:" +
+  process.env.MONGODB_PASSWORD +
+  "@pitchsync.s1p42.mongodb.net/?retryWrites=true&w=majority&appName=PitchSync";
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
