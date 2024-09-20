@@ -7,7 +7,6 @@
   "type": "module",
   "scripts": {
     "analyze": "cem analyze --litelement",
-    "preinstall": "npx npm-force-resolutions",
     "start": "concurrently \"npm run backend\" \"npm run wait-and-start-frontend\"",
     "backend": "node backend/server.js",
     "frontend": "web-dev-server",
