@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { MongoClient, ServerApiVersion } from "mongodb";
 import authRoutes from "./routes/auth.js";
+import teamsRoutes from "./routes/teamInfo.js";
 
 dotenv.config({ path: "./backend/.env" });
 
@@ -22,7 +23,7 @@ app.use(
 const uri =
   "mongodb+srv://kchar:" +
   process.env.MONGODB_PASSWORD +
-  "@pitchsync.s1p42.mongodb.net/?retryWrites=true&w=majority&appName=PitchSync";
+  "@pitch-sync.ylknp.mongodb.net/?retryWrites=true&w=majority&appName=Pitch-Sync";
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -50,6 +51,7 @@ connectToMongo();
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/team", teamsRoutes);
 
 // Start the server
 app.listen(PORT, () => {

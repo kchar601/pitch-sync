@@ -11,7 +11,8 @@ export class RegisterView extends LitElement {
 
   render() {
     return html` <h1>Register</h1>
-      <p>This is the register page.</p>`;
+      <p>This is the register page.</p>
+      <register-button formAttached></register-button>`;
   }
 }
 customElements.define("register-view", RegisterView);

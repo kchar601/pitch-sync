@@ -1,22 +1,19 @@
 import jwt from "jsonwebtoken";
 
-const authenticateJWT = (req, res, next) => {
+// Middleware to authenticate and extract JWT token
+export const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (authHeader) {
-    const token = authHeader.split(" ")[1];
-
+    const token = authHeader.split(" ")[1]; // Extract the token from 'Bearer <token>'
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
       if (err) {
-        return res.status(403).json({ error: "Token is not valid" });
+        return res.sendStatus(403); // Invalid token
       }
-
-      req.user = user; // Add user info to request object
+      req.user = user; // Attach the user object (which includes the userId) to the request
       next();
     });
   } else {
-    res.status(401).json({ error: "Authentication required" });
+    res.sendStatus(401); // No token provided
   }
 };
-
-export default authenticateJWT;

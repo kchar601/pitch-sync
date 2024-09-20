@@ -1,8 +1,12 @@
 import { LitElement, html, css } from "lit";
 import { Router } from "@vaadin/router";
 import "./pages/home-view.js";
-import "./pages/about-view.js";
-// import { routes as blogsRoutes } from "./pages/blogs/index.js";
+import "./pages/dashboard-view.js";
+import { routes as loginRoutes } from "./pages/login/index.js";
+import "./components/logout-button.js";
+import "./components/login-button.js";
+import "./components/register-button.js";
+import "./pages/teams-view.js";
 
 class PitchSync extends LitElement {
   static properties = {};
@@ -13,109 +17,51 @@ class PitchSync extends LitElement {
     super();
   }
 
+  isAuthenticated(context, commands) {
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+      // Redirect to login page if no token is found
+      return commands.redirect("/login");
+    }
+
+    // Proceed to the requested route
+    return undefined;
+  }
+
   firstUpdated() {
     super.firstUpdated();
     const router = new Router(this.shadowRoot.querySelector("#outlet"));
     router.setRoutes([
       { path: "/", component: "home-view" },
-      { path: "/about", component: "about-view" },
       {
-        path: "/blogs",
+        path: "/dashboard",
+        component: "dashboard-view",
+        action: this.isAuthenticated,
+      },
+      { path: "/teams", component: "teams-view", action: this.isAuthenticated },
+      {
+        path: "/login",
         children: () =>
-          import("./pages/blogs/index.js").then((module) => module.routes),
+          import("./pages/login/index.js").then((module) => module.routes),
       },
       { path: "(.*)", redirect: "/" },
     ]);
-  }
-
-  async handleRegister() {
-    try {
-      const sampleData = {
-        email: "sampleuser@example.com",
-        password: "password123",
-        firstName: "John",
-        lastName: "Doe",
-        role: "player", // or 'coach'
-      };
-      const response = await fetch("http://localhost:5000/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(sampleData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(`Registration failed: ${data.message}`);
-        return;
-      }
-
-      alert(data.message); // "Registration successful. Please log in."
-      window.location.href = "/login"; // Redirect to the login page
-    } catch (error) {
-      console.error("Error during registration:", error);
-      alert("An unexpected error occurred.");
-    }
-  }
-
-  login() {
-    fetch("http://localhost:5000/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: "sampleuser@example.com",
-        password: "password123",
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Login successful:", data);
-        // Handle the JWT token here, e.g., store it in localStorage
-        localStorage.setItem("accessToken", data.accessToken);
-        localStorage.setItem("refreshToken", data.refreshToken);
-      })
-      .catch((error) => console.error("Fetch error:", error.message));
-  }
-
-  logout() {
-    const refreshToken = localStorage.getItem("refreshToken");
-
-    fetch("http://localhost:5000/auth/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ refreshToken }),
-    }).then(() => {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      alert("You have been logged out");
-      window.location.href = "/login";
-    });
   }
 
   render() {
     return html`
       <nav>
         <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/blogs">Blog</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/teams">Teams</a>
+        <logout-button></logout-button>
+        <login-button></login-button>
+        <register-button></register-button>
       </nav>
       <main>
         <div id="outlet"></div>
       </main>
-      <button @click="${this.handleRegister}">Register</button>
-      <button @click="${this.login}">Login</button>
-      <button @click="${this.logout}">Logout</button>
     `;
   }
 }

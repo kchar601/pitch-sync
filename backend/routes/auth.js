@@ -60,29 +60,49 @@ router.post("/login", async (req, res) => {
   // Check if user exists
   const user = await db.collection("users").findOne({ email });
 
+  if (!user) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
   // Check if password matches
   const passwordMatch = await bcrypt.compare(password, user.passwordHash);
-  if (user && bcrypt.compareSync(password, user.passwordHash)) {
-    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "15m",
-    });
-    const refreshToken = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_REFRESH_SECRET,
-      { expiresIn: "7d" }
-    );
+  console.log(password, user.passwordHash, passwordMatch);
 
-    await db.collection("refreshTokens").insertOne({ token: refreshToken });
-
-    res.json({ accessToken, refreshToken });
-  } else {
-    res.status(401).json({ message: "Invalid credentials" });
+  if (!passwordMatch) {
+    return res.status(401).json({ message: "Invalid credentials" });
   }
+
+  // Generate new access and refresh tokens
+  const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    expiresIn: "15m",
+  });
+  const refreshToken = jwt.sign(
+    { userId: user._id },
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: "7d" }
+  );
+
+  // Store refresh token in the database
+  await db
+    .collection("refreshTokens")
+    .insertOne({ token: refreshToken, userId: user._id });
+
+  res.json({ accessToken, refreshToken });
 });
 
 router.post("/logout", async (req, res) => {
-  const db = req.app.locals.db; // Get the db from app.locals
+  const db = req.app.locals.db;
   const { refreshToken } = req.body;
+
+  // Check if refresh token exists
+  const tokenExists = await db
+    .collection("refreshTokens")
+    .findOne({ token: refreshToken });
+
+  if (!tokenExists) {
+    return res.status(400).json({ message: "Invalid refresh token" });
+  }
+
   await db.collection("refreshTokens").deleteOne({ token: refreshToken });
   res.status(200).json({ message: "Logged out successfully" });
 });
