@@ -1,6 +1,7 @@
 import { LitElement, html, css } from "lit";
+import "../components/auth-check-nav.js";
 
-export class Home extends LitElement {
+class HomeView extends LitElement {
   static styles = [
     css`
       :host {
@@ -14,4 +15,6 @@ export class Home extends LitElement {
       <p>This is the home page.</p>`;
   }
 }
-customElements.define("home-view", Home);
+customElements.define("home-view", HomeView);
+
+export default HomeView;

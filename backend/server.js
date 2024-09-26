@@ -2,8 +2,10 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { MongoClient, ServerApiVersion } from "mongodb";
-import authRoutes from "./routes/auth.js";
-import teamsRoutes from "./routes/teamInfo.js";
+import authRoutes from "./Middleware/auth.js";
+import goalsRoutes from "./routes/goals.js";
+import habitsRoutes from "./routes/habits.js";
+import tasksRoutes from "./routes/tasks.js";
 
 dotenv.config({ path: "./backend/.env" });
 
@@ -23,7 +25,7 @@ app.use(
 const uri =
   "mongodb+srv://kchar:" +
   process.env.MONGODB_PASSWORD +
-  "@pitch-sync.ylknp.mongodb.net/?retryWrites=true&w=majority&appName=Pitch-Sync";
+  "@effica.yfeoc.mongodb.net/?retryWrites=true&w=majority&appName=effica";
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -51,7 +53,9 @@ connectToMongo();
 
 // Routes
 app.use("/auth", authRoutes);
-app.use("/team", teamsRoutes);
+app.use("/goals", goalsRoutes);
+app.use("/habits", habitsRoutes);
+app.use("/tasks", tasksRoutes);
 
 // Start the server
 app.listen(PORT, () => {

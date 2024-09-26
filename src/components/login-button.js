@@ -81,7 +81,7 @@ export class LoginButton extends LitElement {
         }
         return response.json();
       })
-      .then((data) => {
+      .then(async (data) => {
         console.log("Login successful:", data);
 
         // Store JWT tokens in localStorage
@@ -89,11 +89,10 @@ export class LoginButton extends LitElement {
         localStorage.setItem("refreshToken", data.refreshToken);
 
         // Dispatch a custom event to notify that the tokens have been updated
-        window.dispatchEvent(new CustomEvent("token-changed"));
+        await window.dispatchEvent(new CustomEvent("token-changed"));
+        window.location.href = "/teams";
       })
       .catch((error) => console.error("Fetch error:", error.message));
-
-    // window.location.href = "/"; // Redirect
   }
 
   render() {

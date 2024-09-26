@@ -66,19 +66,30 @@ export class RegisterButton extends LitElement {
       return;
     }
     try {
-      const sampleData = {
-        email: "sampleuser@example.com",
-        password: "password123",
-        firstName: "John",
-        lastName: "Doe",
-        role: "player", // or 'coach'
+      this.firstName = this.parentNode.querySelector(
+        "input[name=firstName]"
+      ).value;
+      this.lastName = this.parentNode.querySelector(
+        "input[name=lastName]"
+      ).value;
+      this.email = this.parentNode.querySelector("input[name=email]").value;
+      this.password = this.parentNode.querySelector(
+        "input[name=password]"
+      ).value;
+
+      console.log("Logging in with:", this.email, this.password);
+      const registerData = {
+        email: this.email,
+        password: this.password,
+        firstName: this.firstName,
+        lastName: this.lastName,
       };
       const response = await fetch("http://localhost:5000/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(sampleData),
+        body: JSON.stringify(registerData),
       });
 
       const data = await response.json();

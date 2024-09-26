@@ -1,8 +1,8 @@
 {
-  "name": "pitch-sync",
-  "description": "Webcomponent pitch-sync following open-wc recommendations",
+  "name": "app-controller",
+  "description": "Webcomponent app-controller following open-wc recommendations",
   "license": "MIT",
-  "author": "pitch-sync",
+  "author": "app-controller",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

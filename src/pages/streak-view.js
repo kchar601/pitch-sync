@@ -1,6 +1,6 @@
 import { LitElement, html, css } from "lit-element";
 
-class DashboardView extends LitElement {
+class StreakView extends LitElement {
   static get styles() {
     return css``;
   }
@@ -13,6 +13,6 @@ class DashboardView extends LitElement {
     return html``;
   }
 }
-customElements.define("dashboard-view", DashboardView);
+customElements.define("streak-view", StreakView);
 
-export default DashboardView;
+export default StreakView;

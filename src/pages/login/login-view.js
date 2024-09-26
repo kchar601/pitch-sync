@@ -12,9 +12,11 @@ export class LoginView extends LitElement {
   render() {
     return html`
       <h1>Login</h1>
-      <input type="text" placeholder="Username" name="email" />
-      <input type="password" placeholder="Password" name="password" />
-      <login-button formAttached></login-button>
+      <form>
+        <input type="text" placeholder="Username" name="email" />
+        <input type="password" placeholder="Password" name="password" />
+        <login-button formAttached></login-button>
+      </form>
     `;
   }
 }

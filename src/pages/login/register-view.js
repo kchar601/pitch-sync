@@ -10,9 +10,17 @@ export class RegisterView extends LitElement {
   ];
 
   render() {
-    return html` <h1>Register</h1>
+    return html`
+      <h1>Register</h1>
       <p>This is the register page.</p>
-      <register-button formAttached></register-button>`;
+      <form>
+        <input type="text" placeholder="First Name" name="firstName" />
+        <input type="text" placeholder="Last Name" name="lastName" />
+        <input type="text" placeholder="Email" name="email" />
+        <input type="password" placeholder="Password" name="password" />
+        <register-button formAttached></register-button>
+      </form>
+    `;
   }
 }
 customElements.define("register-view", RegisterView);
